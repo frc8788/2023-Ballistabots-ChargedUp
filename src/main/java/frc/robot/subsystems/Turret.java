@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;  
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -74,7 +76,7 @@ public class Turret extends Subsystem {
     Extendo.setIdleMode(CANSparkMax.IdleMode.kBrake);
     TurretEncoder = Turret1.getEncoder();
     ExtendoEncoder = Extendo.getEncoder();
-    timer.start();
+    // timer.start();
     TurretEncoder.setPosition(0.0);
     // timer.hasElapsed();
   }
@@ -94,15 +96,17 @@ public class Turret extends Subsystem {
     SmartDashboard.putNumber("Ye", eEncoderGet());
     SmartDashboard.putNumber("YE2", tEncoderGet());
     SmartDashboard.putNumber("Time", Timer.getMatchTime());
+    // Emergency Network table    
+    SmartDashboard.putNumber("Yoooo", -aid.getRawAxis(1));
     //lift code
-    lift.set(ControlMode.PercentOutput, aid.getRawAxis(1));
+    lift.set(ControlMode.PercentOutput, -aid.getRawAxis(1));
     //turret code
     Turret1.setOpenLoopRampRate(0.5);
     Turret1.set(.4 * (aid.getRawAxis(3) - aid.getRawAxis(2)));
     if (sensors.getTouchSensorLeft(5))
-      Turret1.set(.25 * aid.getRawAxis(3)); 
+      Turret1.set(.5 * aid.getRawAxis(3)); 
     if (sensors.getTouchSensorRight(4))
-      Turret1.set(.25 * -aid.getRawAxis(2)); 
+      Turret1.set(.5 * -aid.getRawAxis(2)); 
       //Extendo code
     Extendo.setOpenLoopRampRate(1);
       Extendo.set(.5 * aid.getRawAxis(5)); 
